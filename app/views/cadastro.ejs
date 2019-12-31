@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>MMORPG - Game of Thrones</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-2.2.1.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+
+	</head>
+
+	<body class="body-index">
+
+		<nav class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<form class="form-inline form-entrar">
+					<div class="form-group">				
+						<button type="button" class="btn btn-success">Voltar</button>
+					</div>
+				</form>
+			</div>
+			
+		</nav>
+
+	    <div class="container">
+	    		
+			<form class="form-cadastro" action="/cadastrar" method="post">
+			
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label for="nome" class="col-sm-2 col-form-label">Nome</label>
+							<input type="nome" value="<%=body.nome %>" class="form-control" name="nome" id="nome" placeholder="Nome">
+							<% if(validation.nome) { %>
+							<div class="alert alert-danger">
+								<%=validation.nome %>
+							</div>
+							<% } %>
+						</div>
+					</div>
+					
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label for="usuario" class="col-sm-2 col-form-label">Usuário</label>
+							<input type="usuario" value="<%=body.usuario %>" class="form-control" name="usuario" id="usuario" placeholder="Usuário">
+							<% if(validation.usuario) { %>
+							<div class="alert alert-danger">
+								<%=validation.usuario %>
+							</div>
+							<% } %>
+						</div>
+					</div>
+					
+					<div class="col-xs-4">
+						<div class="form-group">
+							<label for="senha" class="col-sm-2 col-form-label">Senha</label>
+							<input type="password" value="<%=body.senha %>" class="form-control" name="senha" id="senha" placeholder="Password">
+							<% if(validation.senha) { %>
+							<div class="alert alert-danger">
+								<%=validation.senha %>
+							</div>
+							<% } %>
+						</div>
+					</div>
+				</div>
+				
+				<center>
+					<% if(validation.casa) { %>
+					<div class="alert alert-danger">
+						<%=validation.casa %>
+					</div>
+					<% } %>
+				</center>
+				<div class="form-group row">
+				
+        			<div class="col-xs-2">
+        				<img src="images/casa_arryn.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "arryn" ? "checked" : ""%> value="arryn"> Casa Arryn
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_baratheon.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "baratheon" ? "checked" : ""%> value="baratheon"> Casa Baratheon
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_greyjoy.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "greyjoy" ? "checked" : ""%> value="greyjoy"> Casa Greyjoy
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_lannister.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "lannister" ? "checked" : ""%> value="lannister"> Casa Lannister
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_martell.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "martell" ? "checked" : ""%> value="martell"> Casa Martell
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_stark.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "stark" ? "checked" : ""%> value="stark"> Casa Stark
+						</center>
+        			</div>
+        		</div>
+				
+				<div class="form-group row">
+				
+					<div class="col-xs-3"></div>
+				
+        			<div class="col-xs-2">
+        				<img src="images/casa_targaryen.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "targaryen" ? "checked" : ""%> value="targaryen"> Casa Targaryen
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_tully.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "tully" ? "checked" : ""%> value="tully"> Casa Tully
+						</center>
+        			</div>
+					
+					<div class="col-xs-2">
+        				<img src="images/casa_tyrell.jpg" class="img-responsive img-radio">
+						<center>
+							<input type="radio" id="left-item" name="casa" <%=body.casa == "tyrell" ? "checked" : ""%> value="tyrell"> Casa Tyrell
+						</center>
+        			</div>
+					
+					<div class="col-xs-3"></div>
+				</div>	
+				
+			
+				<div class="form-group row">
+					<button type="submit" class="btn btn-primary">Confirmar cadastro</button>
+				</div>
+				
+
+			</form>
+					
+	    </div>	
+		
+	</body>
+</html>
