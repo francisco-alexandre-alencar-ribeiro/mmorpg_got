@@ -8,18 +8,11 @@
 		<!-- JQuery -->
 		<script src="js/jquery-2.2.1.js"></script>
 
-		<!-- bootstrap - link cdn -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<!-- bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
 	
 		<!-- incluindo css -->
 		<link href="css/style.css" rel="stylesheet">
-		<script>
-			jQuery(document).ready(function() {
-				jQuery("#btn_sair").click(function() {
-					window.location.href = "/sair";
-				});
-			});
-		</script>
 	</head>
 
 	<body class="body-jogo">
@@ -36,29 +29,29 @@
 	    	
 			<div class="row">
 	    		<div class="col-sm-3 casa">
-					<img src="images/casa_martell.jpg" />
+					<img src="images/casa_<%= img_casa %>.jpg" />
 				</div>
 
 	    		<div class="col-sm-9">
 					<div class="row barra-superior">
 						<div class="col-sm-2"> 
 							<img src="images/habilidades/temor.jpg" title="Temor" alt="Temor" />
-							<span>754</span>
+							<span><%= jogo.temor %></span>
 						</div>
 						
 						<div class="col-sm-2"> 
 							<img src="images/habilidades/sabedoria.jpg" title="Sabedoria" alt="Sabedoria"/>
-							<span>754</span>
+							<span><%= jogo.sabedoria %></span>
 						</div>
 						
 						<div class="col-sm-2"> 
 							<img src="images/habilidades/comercio.jpg" title="Comércio" alt="Comércio"/>
-							<span>754</span>
+							<span><%= jogo.comercio %></span>
 						</div>
 						
 						<div class="col-sm-2"> 
 							<img src="images/habilidades/magia.jpg" title="Magia" alt="Magia"/>
-							<span>754</span>
+							<span><%= jogo.magia %></span>
 						</div>
 					</div>
 				</div>
@@ -67,7 +60,7 @@
 			<div class="row">
 				<div class="col-sm-3"></div>
 				<div class="col-sm-9">
-					<div class="acoes"></div>					
+					<div class="acoes" id="acoes">Senhor, o que deseja fazer hoje ?</div>					
 				</div>
 			</div>
 			
@@ -78,22 +71,49 @@
 			
 				<div class="row">
 					<div class="col-sm-1">
-						<img src="images/outros/suditos.jpg" title="Aldeões" alt="Aldeões"/>
+						<img src="images/outros/suditos.jpg" title="Suditos" alt="Suditos" id="btn_suditos"/>
+						<span><%= jogo.suditos %></span>
 					</div>
 					
 					<div class="col-sm-1">
-						<img src="images/outros/pergaminho.jpg" title="Pergaminhos" alt="Pergaminhos"/>
+						<img src="images/outros/pergaminho.jpg" title="Pergaminhos" alt="Pergaminhos" id="btn_pergaminhos"/>
+						<span><%= jogo.pergaminhos %></span>
 					</div>
 					
 					<div class="col-sm-8"></div>
 					
 					<div class="col-sm-2">
 						<img src="images/outros/moeda.jpg" title="Moeda" alt="Moeda"/>
-						<span>25</span>
+						<span><%= jogo.moeda %></span>
 					</div>
 					
 				</div>
 			</div>
 		</div>
 	</body>
+	<script>
+		jQuery(document).ready(function() {
+			jQuery("#btn_sair").click(function() {
+				window.location.href = "/sair";
+			});
+			jQuery("#btn_suditos").click(function() {
+				jQuery.ajax({
+					url: '/suditos',
+					method: 'GET',
+					success: function(data) {
+						jQuery("#acoes").html(data);
+					}
+				})
+			});
+			jQuery("#btn_pergaminhos").click(function() {
+				jQuery.ajax({
+					url: '/pergaminhos',
+					method: 'GET',
+					success: function(data) {
+						jQuery("#acoes").html(data);
+					}
+				})
+			});
+		});
+	</script>
 </html>

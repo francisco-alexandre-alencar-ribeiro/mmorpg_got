@@ -1,0 +1,66 @@
+<div id="aldecoes">					
+	<h3>Aldeões</h3>
+	
+	<form class="form-cadastro" >
+
+		<div class="row">
+			<div class="col-xs-5">
+				<div class="form-group">
+					<select class="form-control" id="acao" name="acao">
+						<option value="">-- Escolha a ação</option>
+						<option <%= body.acao === "1" ? 'selected' : '' %> value="1">Coletar recursos (2G e 1H)</option>
+						<option <%= body.acao === "2" ? 'selected' : '' %> value="2">Enforcar aldeão (3G e 2H)</option>
+						<option <%= body.acao === "3" ? 'selected' : '' %> value="3">Ensinar história (1G e 5H)</option>
+						<option <%= body.acao === "4" ? 'selected' : '' %> value="4">Ensinar magia (1G e 5H)</option>
+					</select>
+					<% if(validation.acao) { %>
+						<div class="alert alert-danger">
+							<%=validation.acao %>
+						</div>
+					<% } %>									
+				</div>
+			</div>
+			
+			<div class="col-xs-5">
+				<div class="form-group">
+					<input type="number" class="form-control" placeholder="Quantidade" id="quantidade" name="quantidade" value="<%=body.quantidade%>">
+					<% if(validation.quantidade) { %>
+						<div class="alert alert-danger">
+							<%=validation.quantidade %>
+						</div>
+					<% } %>		
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="form-group row">
+					<button type="button" class="btn btn-primary" id="btn_ordener">Ordenar</button>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-xs-12">
+				<span>Senhor, você possui 8 aldeões desocupados e 2 aldeões em atividade.</span>
+			</div>
+		</div>
+	</form>
+</div>
+<script>
+	jQuery("#btn_ordener").click(function() {
+		jQuery.ajax({
+			url: '/ordenar_acao_sudito',
+			method: 'POST',
+			data: {
+				acao: jQuery("#acao").val(),
+				quantidade: jQuery("#quantidade").val()
+			},
+			success: function(data) {
+				if(data == 'Página não autorizada!') {
+					window.location.href = '/';
+				} else {
+					jQuery("#acoes").html(data);
+				}
+			}
+		});
+	});
+</script>

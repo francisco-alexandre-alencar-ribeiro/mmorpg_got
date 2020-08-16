@@ -7,7 +7,8 @@ UsuarioDAO.prototype.save = function(usuario, callback){
 		let collection = db.collection("usuario");
 
 		collection.insertOne(usuario, function(err, success) {
-			console.log(success.result);
+			if(success.result.ok && callback)
+				callback();
 		});
 
 		client.close();
@@ -19,7 +20,7 @@ UsuarioDAO.prototype.autenticar = function(usuario, req, res) {
 		let collection = db.collection("usuario");
 
 		collection.find(usuario).toArray(function(err, result) {
-			if(result[0] !== undefined){
+			if(result[0]){
 				req.session.autenticado = true;
 				req.session.usuario = result[0].usuario;
 				req.session.casa = result[0].casa;
