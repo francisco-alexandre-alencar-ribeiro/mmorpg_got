@@ -101,7 +101,11 @@
 					url: '/suditos',
 					method: 'GET',
 					success: function(data) {
-						jQuery("#acoes").html(data);
+						if(data == 'Página não autorizada!') {
+							window.location.href = '/';
+						} else {
+							jQuery("#acoes").html(data);
+						}
 					}
 				})
 			});
@@ -110,7 +114,11 @@
 					url: '/pergaminhos',
 					method: 'GET',
 					success: function(data) {
-						jQuery("#acoes").html(data);
+						if(data == 'Página não autorizada!') {
+							window.location.href = '/';
+						} else {
+							jQuery("#acoes").html(data);
+						}
 					}
 				})
 			});

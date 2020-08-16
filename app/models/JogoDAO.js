@@ -38,6 +38,30 @@ JogoDAO.prototype.startGame = function(usuario, callback){
 	});
 }
 
+JogoDAO.prototype.acao = function(acao, callback){
+	this._connection((db, client) => {
+		let collection = db.collection("acao");
+        
+		collection.insertOne(acao, function(err, success) {
+			if(success.result.ok && callback)
+				callback();
+		});
+
+		client.close();
+	});
+}
+
+JogoDAO.prototype.getAcoes = function(usuario, callback) {
+	let collection = db.collection("acao");
+        
+		collection.find(usuario).toArray(function(err, result) {
+            if(callback)
+                callback(result);
+		});
+
+		client.close();
+}
+
 module.exports = function(){
 	return JogoDAO;
 }
