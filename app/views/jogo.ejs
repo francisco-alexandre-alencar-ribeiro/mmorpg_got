@@ -84,9 +84,8 @@
 					
 					<div class="col-sm-2">
 						<img src="images/outros/moeda.jpg" title="Moeda" alt="Moeda"/>
-						<span><%= jogo.moeda %></span>
+						<span id="jogo_moeda"><%= jogo.moeda %></span>
 					</div>
-					
 				</div>
 			</div>
 		</div>
@@ -118,7 +117,31 @@
 							window.location.href = '/';
 						} else {
 							jQuery("#acoes").html(data);
+							cronometro();
 						}
+					}
+				})
+			});
+
+			function cronometro() {
+				setInterval(function() {
+					jQuery(".tempo_restante").each(function() {
+						var tempo_restante = parseInt(jQuery(this).text()) - 1;
+						if(tempo_restante > 0) 
+							jQuery(this).text(tempo_restante);
+						else
+							jQuery(this).closest('li').remove();
+					});
+				}, 1000);
+			}
+
+			jQuery(document).delegate(".revogar_acao", "click", function() {
+				jQuery.ajax({
+					url: `/revogar_acao/${jQuery(this).data('id')}`,
+					method: 'DELETE',
+					success: function(data) {
+						if(data == 'Página não autorizada!') return window.location.href = '/';
+						jQuery("#acoes").html(data);
 					}
 				})
 			});

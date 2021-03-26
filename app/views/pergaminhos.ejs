@@ -1,10 +1,23 @@
 <div id="pergaminhos">					
 	<h3>Pergaminhos</h3>
-	
 	<ul>
-		<li>1 enforcamento(s) programado - <small>restam 00000 segundos - <a href="#">revogar ordem</a></small></li>
-		<li>2 aldeão(ões) em treinamento de magia - <small>restam 00000 segundos - <a href="#">revogar ordem</a></small></li>
-		<li>1 aldeão(ões) em treinamento de história - <small>restam 00000 segundos - <a href="#">revogar ordem</a></small></li>
-		<li>5 aldeão(ões) coletando recursos - <small>restam 00000 segundos - <a href="#">revogar ordem</a></small></li>
+		<%
+			var descricaoAcao = {
+				"1": "aldeão(ões) coletando recursos",
+				"2": "enforcamento(s) programado",
+				"3": "aldeão(ões) em treinamento de história",
+				"4": "aldeão(ões) em treinamento de magia",
+			};
+			
+			for(var i = 0; i < acoes.length; i++) {
+				var restam = Math.round((acoes[i].acao_termina_em - new Date().getTime()) / 1000);
+		%>
+			<li>
+				<%= acoes[i].quantidade%>
+				<%=descricaoAcao[acoes[i].acao]%> - <small>restam <span class="tempo_restante"><%=restam%></span> segundos - <a href="javascript:void(0);" class="revogar_acao" data-id=<%=acoes[i]._id%>>revogar ordem</a></small>
+			</li>
+		<% 
+			} 
+		%>
 	</ul>
 </div>

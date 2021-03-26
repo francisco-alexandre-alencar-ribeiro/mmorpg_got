@@ -6,7 +6,7 @@
 		<div class="row">
 			<div class="col-xs-5">
 				<div class="form-group">
-					<select class="form-control" id="acao" name="acao">
+					<select class="form-control" id="acao" name="acao" <%= jogo.moeda > 0 ? '' : 'disabled' %>>
 						<option value="">-- Escolha a ação</option>
 						<option <%= body.acao === "1" ? 'selected' : '' %> value="1">Coletar recursos (2G e 1H)</option>
 						<option <%= body.acao === "2" ? 'selected' : '' %> value="2">Enforcar aldeão (3G e 2H)</option>
@@ -23,7 +23,7 @@
 			
 			<div class="col-xs-5">
 				<div class="form-group">
-					<input type="number" class="form-control" placeholder="Quantidade" id="quantidade" name="quantidade" value="<%=body.quantidade%>">
+					<input type="number" class="form-control" placeholder="Quantidade" id="quantidade" name="quantidade" value="<%=body.quantidade%>" <%= jogo.moeda > 0 ? '' : 'disabled' %>>
 					<% if(validation.quantidade) { %>
 						<div class="alert alert-danger">
 							<%=validation.quantidade %>
@@ -33,7 +33,7 @@
 			</div>
 			<div class="col-xs-2">
 				<div class="form-group row">
-					<button type="button" class="btn btn-primary" id="btn_ordener">Ordenar</button>
+					<button type="button" class="btn btn-primary" id="btn_ordener" <%= jogo.moeda > 0 ? '' : 'disabled' %>>Ordenar</button>
 				</div>
 			</div>
 		</div>
@@ -58,7 +58,8 @@
 				if(data == 'Página não autorizada!') {
 					window.location.href = '/';
 				} else {
-					jQuery("#acoes").html(data);
+					jQuery("#jogo_moeda").text(data.moeda);
+					jQuery("#acoes").html(data.message);
 				}
 			}
 		});
