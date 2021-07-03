@@ -20,28 +20,24 @@
 
 		<nav class="navbar navbar-default navbar-static-top">
 			<div class="container">
-				<% if(validation) { %>
+
+				<% if(validacao.length > 0){ %>
 					<div class="alert alert-danger">
-						<strong>Atenção</strong>
+						<strong>Atenção!</strong>
 						<ul>
-							<% for(var i in validation) { %>
-								<li>
-									<%=validation[i].msg %>
-								</li>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
 							<% } %>
 						</ul>
 					</div>
 				<% } %>
+
 				<form class="form-inline form-entrar" action="/autenticar" method="post">
 					<div class="form-group">				
-						<input type="text" name="usuario" id="usuario" value="<%=body.usuario %>" placeholder="Usuário" class="form-control" autocomplete="off" />
-					</div>
-					<div class="form-group">
-						<input type="password" name="senha" id="senha" value="<%=body.senha %>" placeholder="Senha" class="form-control" />
-					</div>
-					<div class='form-group'>
+						<input type="text" name="usuario" id="usuario" placeholder="Usuário" class="form-control" autocomplete="off" />
+						<input type="password" name="senha" id="senha" placeholder="Senha" class="form-control" />
 						<button type="submit" class="btn btn-success">Entrar</button>
-						<a href="/cadastro" class="btn btn-info">Cadastro</a>
+						<button type="button" class="btn btn-info">Cadastro</button>
 					</div>
 				</form>
 			</div>

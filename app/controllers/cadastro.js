@@ -1,34 +1,30 @@
-module.exports.cadastro = (application, req, res) => {
-	res.render('cadastro', { body: {}, validation: {} });
+module.exports.cadastro = function (application, req, res){
+	res.render('cadastro', {validacao: {}, dadosForm: {}});
 }
 
-module.exports.cadastrar = (application, req, res) => {
-	let body = req.body;
+module.exports.cadastrar = function(application, req, res){
 
-	req.assert('nome', 'O campo nome não pode ficar vazio.').notEmpty();
-	req.assert('usuario', 'O campo usuario não pode ficar vazio.').notEmpty();
-	req.assert('senha', 'O campo senha não pode ficar vazio.').notEmpty();
-	req.assert('casa', 'A casa deve ser selecionada.').notEmpty();
+	var dadosForm = req.body;
 
-	let errors = req.validationErrors();
+	req.assert('nome', 'Nome não pode ser vazio').notEmpty();
+	req.assert('usuario', 'Usuário não pode ser vazio').notEmpty();
+	req.assert('senha', 'Senha não pode ser vazio').notEmpty();
+	req.assert('casa', 'Casa não pode ser vazio').notEmpty();
 
-	if(errors) {
-		let validation = {}
+	var erros = req.validationErrors();
 
-		errors.map(error => {
-			validation[error.param] = error.msg;
-		});
-
-		res.render('cadastro', {validation, body});
+	if(erros){
+		res.render('cadastro', {validacao: erros, dadosForm: dadosForm});
 		return;
 	}
 
 	var connection = application.config.dbConnection;
-	var usuario = new application.app.models.UsuarioDAO(connection);
-	var jogo = new application.app.models.JogoDAO(connection)
-	jogo.generateParams(body.usuario);
+	var UsuariosDAO = new application.app.models.UsuariosDAO(connection);
+	var JogoDAO = new application.app.models.JogoDAO(connection);
 
-	usuario.save(body, () => {
-		res.redirect('/');
-	});
+	UsuariosDAO.inserirUsuario(dadosForm);
+	JogoDAO.gerarParametros(dadosForm.usuario);
+	//geração dos parametros
+
+	res.send('podemos cadastrar')
 }

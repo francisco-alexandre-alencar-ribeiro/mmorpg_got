@@ -1,96 +1,112 @@
-var ObjectID = require('mongodb').ObjectID;
+var ObjectID = require('mongodb').ObjectId;
 
-function JogoDAO(connection) {
-	this._connection = connection;
+function JogoDAO(connection){
+	this._connection = connection();
 }
 
-JogoDAO.prototype.generateParams = function(usuario, callback) {
-	this._connection((db, client) => {
-		let collection = db.collection("jogo");
-        
-        let jogo = {
-            usuario,
-            moeda: 15, 
-            suditos: 10,
-            temor: Math.floor((Math.random() * 1000)),
-            sabedoria: Math.floor((Math.random() * 1000)),
-            comercio: Math.floor((Math.random() * 1000)),
-            magia: Math.floor((Math.random() * 1000))
-        }
+JogoDAO.prototype.gerarParametros = function(usuario){
+	this._connection.open( function(err, mongoclient){
+		mongoclient.collection("jogo", function(err, collection){
+			collection.insert({
+				usuario: usuario,
+				moeda: 15,
+				suditos: 10,
+				temor: Math.floor(Math.random() * 1000),
+				sabedoria: Math.floor(Math.random() * 1000),
+				comercio: Math.floor(Math.random() * 1000),
+				magia: Math.floor(Math.random() * 1000)
+			});
 
-		collection.insertOne(jogo, function(err, success) {
-			if(success.result.ok && callback)
-				callback();
+			mongoclient.close();
+		});
+	});
+}
+
+JogoDAO.prototype.iniciaJogo = function(res, usuario, casa, msg){
+
+	this._connection.open( function(err, mongoclient){
+		mongoclient.collection("jogo", function(err, collection){
+			collection.find({usuario : usuario}).toArray(function(err, result){
+				res.render("jogo", {img_casa: casa, jogo: result[0], msg : msg});
+				
+				mongoclient.close();
+			});
+		});
+	});
+}
+
+JogoDAO.prototype.acao = function(acao){
+	this._connection.open( function(err, mongoclient){
+		mongoclient.collection("acao", function(err, collection){
+			
+			var date = new Date();
+
+			var tempo = null;
+			
+			switch(parseInt(acao.acao)){
+				case 1: tempo = 1 * 60 * 60000; break;
+				case 2: tempo = 2 * 60 * 60000; break;
+				case 3: tempo = 5 * 60 * 60000; break;
+				case 4: tempo = 5 * 60 * 60000; break;
+			}	
+
+			acao.acao_termina_em = date.getTime() + tempo;
+			collection.insert(acao);
+
 		});
 
-		client.close();
-	});
-};
+		mongoclient.collection("jogo", function(err, collection){
 
+			var moedas = null;
 
-JogoDAO.prototype.update = function(update, callback) {
-	this._connection((db, client) => {
-		let collection = db.collection("jogo");
+			switch(parseInt(acao.acao)){
+				case 1: moedas = -2 * acao.quantidade; break;
+				case 2: moedas = -3 * acao.quantidade; break;
+				case 3: moedas = -1 * acao.quantidade; break;
+				case 4: moedas = -1 * acao.quantidade; break;
+			}	
 
-		collection.updateOne(update.where, {$set: update.set}, (err, success) => {
-			if(success.result.ok && callback) callback();
+			collection.update(
+				{ usuario: acao.usuario},
+				{ $inc: {moeda: moedas}}
+			);
+
+			mongoclient.close();
 		});
-
-		client.close();
 	});
-};
+}
 
-JogoDAO.prototype.revogarAcao = function(_id, callback) {
-	this._connection((db, client) => {
-		let collection = db.collection("acao");
+JogoDAO.prototype.getAcoes = function(usuario, res){
+	this._connection.open( function(err, mongoclient){
+		mongoclient.collection("acao", function(err, collection){
+			
+			var date = new Date();
+			var momento_atual = date.getTime();
 
-		collection.deleteOne({_id: ObjectID(_id)}, (err, success) => {
-			if(success.result.ok && callback) callback();
+			collection.find({usuario : usuario, acao_termina_em: {$gt:momento_atual}}).toArray(function(err, result){
+				
+				res.render("pergaminhos", {acoes: result});
+				
+				mongoclient.close();
+			});
 		});
-
-		client.close();
 	});
-};
+}
 
-JogoDAO.prototype.startGame = function(usuario, callback) {
-	this._connection((db, client) => {
-		let collection = db.collection("jogo");
-        
-		collection.find(usuario).toArray(function(err, result) {
-            if(callback)
-                callback(result[0] || {});
+JogoDAO.prototype.revogarAcao = function(_id, res){
+	this._connection.open( function(err, mongoclient){
+		mongoclient.collection("acao", function(err, collection){
+			collection.remove(
+				{_id : ObjectID(_id)},
+				function(err, result){
+					res.redirect("jogo?msg=D");
+					mongoclient.close();
+				}
+			);			
 		});
-
-		client.close();
 	});
-};
-
-JogoDAO.prototype.acao = function(acao, callback) {
-	this._connection((db, client) => {
-		let collection = db.collection("acao");
-        
-		collection.insertOne(acao, function(err, success) {
-			if(success.result.ok && callback)
-				callback();
-		});
-
-		client.close();
-	});
-};
-
-JogoDAO.prototype.getAcoes = function(usuario, callback) {
-	this._connection((db, client) => {
-		let collection = db.collection("acao");
-
-		collection.find({usuario, acao_termina_em: {$gt: new Date().getTime()}}).toArray(function(err, result) {
-			if(callback)
-				callback(result);
-		});
-
-		client.close();
-	});
-};
+}
 
 module.exports = function(){
 	return JogoDAO;
-};
+}
